@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,17 +13,69 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
     {
         public static DataDaseWindow Instance { private set; get; }
         private Request _request;
+        private Users _user;
 
-        public DataDaseWindow()
+        public DataDaseWindow(Users users)
+        {
+            _user = users;
+            Init();
+        }
+
+        private void Init() 
         {
             InitializeComponent();
+
+            var role = _user.RoleID;
+
+            if (role == 1)
+            {
+                ButtonVisivility(Visibility.Visible, Visibility.Visible, Visibility.Visible);
+            }
+            else if (role == 2)
+            {
+                ButtonVisivility(Visibility.Visible, Visibility.Visible, Visibility.Visible);
+            }
+            else if (role == 3)
+            {
+                ButtonVisivility(Visibility.Hidden, Visibility.Hidden, Visibility.Hidden);
+            }
+            else
+            {
+                ButtonVisivility (Visibility.Hidden, Visibility.Hidden, Visibility.Hidden);
+            }
             UpdateGrid();
             Instance = this;
         }
 
+        private void ButtonVisivility(Visibility createButton, Visibility updateButton, Visibility deleteButton)
+        {
+            CreateButton.Visibility = createButton;
+            Update.Visibility = updateButton;
+            Delete.Visibility = deleteButton;
+        }
+
         public void UpdateGrid()
         {
-            Reqst.ItemsSource = Helper.GetContext().Request.ToList();
+            var role = _user.RoleID;
+            Request[] requests;
+
+            if (role == 1)
+            {
+                requests = Helper.GetContext().Request.ToArray();
+            }
+            else if (role == 2)
+            {
+                requests = Helper.GetContext().Request.Where(x => x.ClientID == _user.ID).ToArray();
+            }
+            else if (role == 3)
+            {
+                requests = Helper.GetContext().Request.ToArray();
+            }
+            else
+            {
+                requests = Helper.GetContext().Request.Where(x => x.ClientID == _user.ID).ToArray();
+            }
+            Reqst.ItemsSource = requests;
         }
 
         private void ClientDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,6 +91,7 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
 
         private void agentGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -52,11 +106,10 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
             {
                 var chooseRequest = new RequestWIndow(_request);
                 chooseRequest.Show();
-                UpdateGrid();
             }
             else
             {
-                MessageBox.Show("Null request");
+                MessageBox.Show("Данные не выбраны!");
             }
         }
 
@@ -68,10 +121,11 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
                 Helper.GetContext().SaveChanges();
                 _request = null;
                 UpdateGrid();
+                MessageBox.Show("Данные удалены!");
             }
             else
             {
-                MessageBox.Show("Null request");
+                MessageBox.Show("Данные не выбраны!");
             }
         }
 

@@ -8,8 +8,6 @@
         Title="DataDaseWindow" Height="450" Width="800">
     <Grid>
 
-
-
         <DataGrid AutoGenerateColumns="False" x:Name="Reqst" Grid.Row="1" IsReadOnly="True" GridLinesVisibility="None" MouseDown="agentGrid_MouseDown" SelectionChanged="ClientDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="StartDate" Binding="{Binding StartDate}" />

@@ -16,6 +16,7 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
         public RequestWIndow()
         {
             InitializeComponent();
+            datePicker.SelectedDate = DateTime.Now;
             TechType.ItemsSource = Helper.GetContext().TechType.ToList();
             _reques = new Request();
             Helper.GetContext(true);
@@ -35,20 +36,26 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
 
         private void SaveData()
         {
+            //if (_reques.TechTypeID)
             _reques.StartDate = (DateTime)datePicker.SelectedDate;
             _reques.TechTypeID = TechType.SelectedIndex+1;
             _reques.Description = Description.Text;
+
+            MessageBox.Show(_reques.TechTypeID.ToString());
+            
+            
             if (_createRequest)
             {
+                MessageBox.Show("Запись добавлена!");
                 Helper.GetContext().Request.Add(_reques);
             }
+            else
+            {
+                MessageBox.Show("Данные обновлены!");
+            }
+
             Helper.GetContext().SaveChanges();
             DataDaseWindow.Instance.UpdateGrid();
-        }
-
-        private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         private void button_Click(object sender, RoutedEventArgs e)

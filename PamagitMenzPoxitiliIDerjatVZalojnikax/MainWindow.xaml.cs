@@ -31,14 +31,20 @@ namespace PamagitMenzPoxitiliIDerjatVZalojnikax
             var password = passwordBox.Password;
             var user = Helper.GetContext().Users.Where(p=>p.Password == password && p.Login == login).FirstOrDefault();
 
+            if(login == "" || password == "")
+            {
+                MessageBox.Show("Заполните необходимые поля");
+                return;
+            }    
+
             if(user != null)
             {
-                var dataWindow = new DataDaseWindow();
+                var dataWindow = new DataDaseWindow(user);
                 dataWindow.Show();
             }
             else
             {
-                MessageBox.Show("лоо00000000ох пидр");
+                MessageBox.Show("Неверный логин или пароль");
             }
         }
     }
